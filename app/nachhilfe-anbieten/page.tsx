@@ -4,6 +4,7 @@ import OfferGrid from "./components/offer-grid";
 import { Button } from "@/components/ui/button";
 import { mockTutoringOffers } from "@/lib/mock-data";
 import Link from "next/link";
+import { CirclePlus } from "lucide-react";
 
 export default async function OfferTutoring() {
   const session = await auth();
@@ -24,7 +25,8 @@ export default async function OfferTutoring() {
       <div className="flex items-center">
         <h1 className="text-4xl font-serif font-semibold">Deine Angebote</h1>
         <Button className="ml-auto">
-          <Link href="/nachhilfe-anbieten/neu">Neues Angebot erstellen</Link>
+          <CirclePlus />
+          <Link href="/nachhilfe-anbieten/neu">Neues Angebot</Link>
         </Button>
       </div>
       <div className="mt-4">

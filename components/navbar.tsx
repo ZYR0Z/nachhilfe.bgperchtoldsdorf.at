@@ -19,41 +19,44 @@ export function Navbar({ user }: { user: User | undefined }) {
   ];
 
   return (
-    <header className="px-4 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 h-16 flex itemx-center justify-between">
-      <div className="flex items-center gap-6 md:gap-10">
-        <Link
-          href="/"
-          className="font-bold text-xl text-primary flex items-center gap-2"
-        >
-          <PencilRuler />
-          Nachhilfe
-        </Link>
-        <nav className="hidden md:flex gap-6">
-          {navItems.map(({ href, name }) => (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-primary",
-                pathname === href
-                  ? "text-foreground underline "
-                  : "text-muted-foreground",
-              )}
-            >
-              {name}
-            </Link>
-          ))}
-        </nav>
-      </div>
-      <div className="flex items-center gap-2">
-        <ThemeToggle />
-        {user ? (
-          <UserNav user={user} />
-        ) : (
-          <Button asChild variant="default">
-            <Link href="/api/auth/signin">Anmelden</Link>
-          </Button>
-        )}
+    <header className="px-4 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 h-16">
+      <div className="flex h-full items-center justify-between">
+        <div className="flex items-center gap-6 md:gap-10">
+          <Link
+            href="/"
+            className="font-bold text-xl text-primary flex items-center gap-2"
+          >
+            <PencilRuler />
+            Nachhilfe
+          </Link>
+          <nav className="hidden md:flex gap-6">
+            {navItems.map(({ href, name }) => (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-primary",
+                  pathname === href
+                    ? "text-foreground underline "
+                    : "text-muted-foreground",
+                )}
+              >
+                {" "}
+                {name}
+              </Link>
+            ))}
+          </nav>
+        </div>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          {user ? (
+            <UserNav user={user} />
+          ) : (
+            <Button asChild variant="default">
+              <Link href="/api/auth/signin">Anmelden</Link>
+            </Button>
+          )}
+        </div>
       </div>
     </header>
   );

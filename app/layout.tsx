@@ -1,6 +1,5 @@
 import { Navbar } from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
-import { mockUser } from "@/lib/mock-data";
 import "@/app/globals.css";
 import { Geist_Mono } from "next/font/google";
 import Footer from "@/components/footer";

@@ -18,22 +18,6 @@ export const mockSubjects = [
     { id: 13, name: "Musik" },
 ]
 
-// Mock user
-// infer the type
-export type User = {
-    id: string
-    name: string
-    email: string
-    user_class: string
-    profile_picture: string | null
-}
-export const mockUser: User = {
-    id: "user1",
-    name: "Max Mustermann",
-    email: "max@example.com",
-    user_class: "10A",
-    profile_picture: null,
-}
 
 // Mock tutoring offers
 export const mockTutoringOffers = [
@@ -44,8 +28,7 @@ export const mockTutoringOffers = [
             id: "user1",
             name: "Max Mustermann",
             email: "max@example.com",
-            user_class: "10A",
-            profile_picture: null,
+            image: null,
         },
         grades: [5, 6, 7],
         description:
@@ -67,8 +50,7 @@ export const mockTutoringOffers = [
             id: "user2",
             name: "Anna Schmidt",
             email: "anna@example.com",
-            user_class: "11B",
-            profile_picture: null,
+            image: null,
         },
         grades: [5, 6, 7, 8],
         description:
@@ -90,8 +72,7 @@ export const mockTutoringOffers = [
             id: "user3",
             name: "Tim Müller",
             email: "tim@example.com",
-            user_class: "12C",
-            profile_picture: null,
+            image: null,
         },
         grades: [5, 6, 7, 8],
         description:
@@ -113,8 +94,7 @@ export const mockTutoringOffers = [
             id: "user4",
             name: "Laura Weber",
             email: "laura@example.com",
-            user_class: "12A",
-            profile_picture: null,
+            image: null,
         },
         grades: [7, 8],
         description:
@@ -136,8 +116,7 @@ export const mockTutoringOffers = [
             id: "user5",
             name: "Felix Bauer",
             email: "felix@example.com",
-            user_class: "11C",
-            profile_picture: null,
+            image: null,
         },
         grades: [6, 7, 8],
         description:

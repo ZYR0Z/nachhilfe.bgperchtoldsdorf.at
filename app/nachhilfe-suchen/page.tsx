@@ -1,5 +1,4 @@
 import { getAllOffers } from "@/actions/offerActions";
-import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -112,7 +111,7 @@ export default async function FindTutoring() {
             </div>
             <div className="w-full space-y-2">
               <Label htmlFor="price">Preis</Label>
-              <Slider defaultValue={[33, 77]} max={100} step={1} />
+              THERE WILL BE A SLIDER HERE
             </div>
           </CardContent>
         </Card>

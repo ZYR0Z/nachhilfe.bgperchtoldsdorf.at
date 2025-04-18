@@ -1,5 +1,6 @@
 import {
     check,
+    text,
     integer,
     jsonb,
     pgTable,
@@ -18,7 +19,7 @@ export const tutoringOffersTable = pgTable(
             .notNull()
             .references(() => subjectsTable.id),
         // Only one tutor per tutoring offer
-        tutor_id: varchar({ length: 255 }).notNull(),
+        tutor_id: varchar({ length: 255 }).notNull().references(() => tutorsTable.id),
 
         // TODO: maybe own table for this?
         grades: integer().array().notNull(),
@@ -48,20 +49,20 @@ export const tutoringOffersTable = pgTable(
     ]
 );
 
-// export const tutorsTable = pgTable("tutors", {
-//   // Will be provided from ldap auth service
-//   id: varchar({ length: 255 }).primaryKey(), // needs to be unique (LDAP: user_id)
-//   name: varchar({ length: 255 }).notNull(),
-//   email: varchar({ length: 255 }).notNull().unique(),
-//   // WARNING: user_class != grade -> grades are without class delimiters (e.g. "7D" -> "7")
-//   user_class: varchar({ length: 255 }).notNull(),
-//   // TODO: maybe the images are local?
-//   // maybe we dont even get the from ldap? just from moodle => then we wont do this
-//   profile_picture: text(),
-//   // TODO: sync the tutors infos with the ldap auth service (especially for the user_class)
-//   createdAt: timestamp().notNull().defaultNow(),
-//   updatedAt: timestamp().notNull().defaultNow().$onUpdate(() => new Date()),
-// });
+export const tutorsTable = pgTable("tutors", {
+    // Will be provided from ldap auth service
+    id: varchar({ length: 255 }).primaryKey(), // needs to be unique (LDAP: user_id)
+    name: varchar({ length: 255 }).notNull(),
+    email: varchar({ length: 255 }).notNull().unique(),
+    // WARNING: user_class != grade -> grades are without class delimiters (e.g. "7D" -> "7")
+    user_class: varchar({ length: 255 }).notNull(),
+    // TODO: maybe the images are local?
+    // maybe we dont even get the from ldap? just from moodle => then we wont do this
+    profile_picture: text(),
+    // TODO: sync the tutors infos with the ldap auth service (especially for the user_class)
+    createdAt: timestamp().notNull().defaultNow(),
+    updatedAt: timestamp().notNull().defaultNow().$onUpdate(() => new Date()),
+});
 
 export const subjectsTable = pgTable("subjects", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -74,11 +75,11 @@ export const tutoringOfferRelations = relations(
         subject: one(subjectsTable, {
             fields: [tutoringOffersTable.subject_id],
             references: [subjectsTable.id]
-        })
-        // tutor: one(tutorsTable, {
-        //   fields: [tutoringOffersTable.tutor_id],
-        //   references: [tutorsTable.id],
-        // }),
+        }),
+        tutor: one(tutorsTable, {
+            fields: [tutoringOffersTable.tutor_id],
+            references: [tutorsTable.id],
+        }),
     })
 );
 
@@ -86,7 +87,7 @@ export const subjectsRelations = relations(subjectsTable, ({ many }) => ({
     tutoringOffers: many(tutoringOffersTable)
 }));
 
-// export const tutorsRelations = relations(tutorsTable, ({ many }) => ({
-//   tutoringOffers: many(tutoringOffersTable),
-// }));
+export const tutorsRelations = relations(tutorsTable, ({ many }) => ({
+    tutoringOffers: many(tutoringOffersTable),
+}));
 

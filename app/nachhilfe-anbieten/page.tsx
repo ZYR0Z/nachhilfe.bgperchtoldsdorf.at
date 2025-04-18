@@ -1,16 +1,17 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-import OfferGrid from "./components/offer-grid";
+import { auth, signIn } from "@/auth";
 import { Button } from "@/components/ui/button";
-import { mockTutoringOffers } from "@/lib/mock-data";
+import OfferCard from "@/components/offer-card";
 import Link from "next/link";
 import { CirclePlus } from "lucide-react";
+import { getOffersByTutorId } from "@/actions/offerActions";
 
 export default async function OfferTutoring() {
   const session = await auth();
-  if (!session?.user) {
-    return redirect("/login?callbackUrl=/nachhilfe-anbieten");
+  if (!session?.user?.email) {
+    return signIn("/nachhilfe-anbieten/");
   }
+
+  const offers = await getOffersByTutorId(session.user.email);
 
   const { name } = session.user;
 
@@ -30,7 +31,22 @@ export default async function OfferTutoring() {
         </Button>
       </div>
       <div className="mt-4">
-        <OfferGrid offers={mockTutoringOffers} />
+        {offers.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {offers.map((offer) => (
+              <OfferCard key={offer.id} offer={offer} variant="edit" />
+            ))}
+          </div>
+        ) : (
+          <>
+            <p className="text-md text-muted-foreground">
+              Du hast noch keine Angebote erstellt.{" "}
+              <Link href="/nachhilfe-anbieten/neu" className="underline">
+                Erstelle jetzt dein erstes Angebot!
+              </Link>
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

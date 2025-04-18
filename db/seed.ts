@@ -1,10 +1,9 @@
 
 import 'dotenv/config';
-import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { subjectsTable } from './schema';
+import { db } from '.';
 
 async function main() {
-    const db = drizzle();
 
     // TODO: what subjects do we need?
     const subjects: (typeof subjectsTable.$inferInsert)[] = [

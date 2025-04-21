@@ -9,7 +9,8 @@ import { UserNav } from "@/components/navbar/user-nav";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { User } from "next-auth";
-import { signIn } from "@/auth";
+// import { signIn } from "@/auth";
+import { signIn } from "next-auth/react";
 
 export function Navbar({ user }: { user: User | undefined }) {
   const pathname = usePathname();

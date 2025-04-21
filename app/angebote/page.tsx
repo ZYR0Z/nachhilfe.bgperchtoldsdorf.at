@@ -13,7 +13,6 @@ export default async function FindTutoring() {
       </div>
       <div className="grid grid-cols-3 gap-4">
         {offers.map((offer) => (
-          // TODO: make them all the same dimensions for skeleton
           <OfferCard key={offer.id} offer={offer} />
         ))}
       </div>

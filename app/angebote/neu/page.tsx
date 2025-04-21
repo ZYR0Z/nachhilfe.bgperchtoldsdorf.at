@@ -1,18 +1,16 @@
 import { NewTutor } from "@/actions/tutorActions";
 import OfferForm from "@/components/offer/form";
 import { getAllSubjects } from "@/actions/subjectActions";
-import { auth } from "@/auth";
-import { signIn } from "next-auth/react";
+import { auth, signIn } from "@/auth";
 
 export default async function Page() {
   const subjects = await getAllSubjects();
   const grades = Array.from({ length: 8 }, (_, i) => i + 1);
   const session = await auth();
   if (!session?.user?.email || !session.user.name)
-    return signIn("/angebote/neu");
+    return signIn(undefined, { redirectTo: "/angebote/neu" });
   const { email, name, image } = session.user;
 
-  // TODO: maybe we can also create a wrapper for this type
   // TODO: once we have ldap auth working, this wont be necessary
   const tutor: NewTutor = {
     user_class: "7D",

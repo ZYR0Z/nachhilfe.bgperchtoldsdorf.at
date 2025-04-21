@@ -66,11 +66,12 @@ export function UserNav({ user, pathname }: { user: User; pathname: string }) {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut({ redirectTo: pathname })}>
-          <Button className="w-full bg-primary text-foreground">
-            <LogOut className="mr-2 h-4 w-4 text-foreground" />
-            Abmelden
-          </Button>
+        <DropdownMenuItem
+          onClick={() => signOut({ redirectTo: pathname })}
+          className="cursor-pointer"
+        >
+          <LogOut className="mr-2 h-4 w-4 text-foreground" />
+          Abmelden
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

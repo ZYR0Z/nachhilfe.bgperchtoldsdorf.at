@@ -82,8 +82,9 @@ export default function OfferForm({
     if (offer && offer.id) {
       editOffer(offer.id, values);
     } else {
-      createOffer(values);
+      // FIXME: actually only if its not a admin
       createTutor(tutor);
+      createOffer(values);
     }
     redirect("/angebote/meine-angebote");
   }

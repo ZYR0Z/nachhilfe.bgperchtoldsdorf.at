@@ -9,7 +9,9 @@ export default async function OfferTutoring() {
   const session = await auth();
   // TODO: we want to actually check for a user_id
   if (!session?.user?.email) {
-    return signIn("/nachhilfe-anbieten/");
+    return signIn(undefined, {
+      redirectTo: "/angebote/meine-angebote",
+    });
   }
 
   const offers = await getOffersByTutorId(session.user.email);

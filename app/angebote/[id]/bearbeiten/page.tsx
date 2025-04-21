@@ -1,8 +1,7 @@
 import { NewTutor } from "@/actions/tutorActions";
 import OfferForm from "@/components/offer/form";
 import { getAllSubjects } from "@/actions/subjectActions";
-import { auth } from "@/auth";
-import { signIn } from "next-auth/react";
+import { auth, signIn } from "@/auth";
 import { notFound } from "next/navigation";
 import { getOfferById } from "@/actions/offerActions";
 
@@ -16,7 +15,9 @@ export default async function Page({ params }: { params: Params }) {
 
   const session = await auth();
   if (!session?.user?.email || !session.user.name)
-    return signIn("/angebote/neu");
+    return signIn(undefined, {
+      redirectTo: `/angebote/${id}/bearbeiten`,
+    });
   const { email, name, image } = session.user;
 
   const subjects = await getAllSubjects();

@@ -9,7 +9,7 @@ import { UserNav } from "@/components/navbar/user-nav";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { User } from "next-auth";
-import { signIn } from "next-auth/react";
+import { signIn } from "@/auth";
 
 export function Navbar({ user }: { user: User | undefined }) {
   const pathname = usePathname();
@@ -62,14 +62,17 @@ export function Navbar({ user }: { user: User | undefined }) {
           </nav>
         </div>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           {user ? (
             <UserNav user={user} pathname={pathname} />
           ) : (
-            <Button asChild variant="default" onClick={() => signIn(pathname)}>
+            <Button
+              variant="default"
+              onClick={() => signIn(undefined, { redirectTo: pathname })}
+            >
               Anmelden
             </Button>
           )}
+          <ThemeToggle />
         </div>
       </div>
     </header>

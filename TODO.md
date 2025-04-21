@@ -1,4 +1,5 @@
 # TODO
+- [ ] have a look at auth.js `signIn` function and when to import from `@/auth` or `next-auth/react`
 - [ ] we need to add a loading state every page that needs to fetch data from the db
     - [ ] we need to fix the loading on subpages (maybe each card has a loading prop & own load handeling?)
 - [ ] make navbar active link match all the subroutes as well so /nachhilfe-anbieten and ./nachhilfe-anbieten/neu are both active

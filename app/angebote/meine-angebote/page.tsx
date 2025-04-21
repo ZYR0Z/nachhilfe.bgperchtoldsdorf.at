@@ -1,12 +1,13 @@
 import { auth, signIn } from "@/auth";
 import { Button } from "@/components/ui/button";
-import OfferCard from "@/components/offer-card";
+import OfferCard from "@/components/offer/card";
 import Link from "next/link";
 import { CirclePlus } from "lucide-react";
 import { getOffersByTutorId } from "@/actions/offerActions";
 
 export default async function OfferTutoring() {
   const session = await auth();
+  // TODO: we want to actually check for a user_id
   if (!session?.user?.email) {
     return signIn("/nachhilfe-anbieten/");
   }
@@ -15,24 +16,23 @@ export default async function OfferTutoring() {
 
   const { name } = session.user;
 
-  // NOTE: we want to list all the tutoring offers the user has made and be able to edit and delete them (even bulk delete)
-  // we also want to be able to create a new tutoring offer
-  // and if there is no tutoring offer, we automatically redirect to the /nachhilfe-anbieten/neu page
   return (
     <div className="p-8">
-      <p className="text-md text-muted-foreground">
-        Willkommen <span className="italic">{name}</span>.
-      </p>
       <div className="flex items-center">
-        <h1 className="text-4xl font-serif font-semibold">Deine Angebote</h1>
+        <div>
+          <h1 className="text-4xl font-serif font-semibold">Deine Angebote</h1>
+          <p className="text-md text-muted-foreground">
+            Willkommen <span className="italic">{name}</span>.
+          </p>
+        </div>
         <Button className="ml-auto">
           <CirclePlus />
-          <Link href="/nachhilfe-anbieten/neu">Neues Angebot</Link>
+          <Link href="/angebote/neu">Neues Angebot</Link>
         </Button>
       </div>
       <div className="mt-4">
         {offers.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             {offers.map((offer) => (
               <OfferCard key={offer.id} offer={offer} variant="edit" />
             ))}
@@ -40,8 +40,8 @@ export default async function OfferTutoring() {
         ) : (
           <>
             <p className="text-md text-muted-foreground">
-              Du hast noch keine Angebote erstellt.{" "}
-              <Link href="/nachhilfe-anbieten/neu" className="underline">
+              Du hast noch keine Angebote erstellt.
+              <Link href="/angebote/neu" className="underline">
                 Erstelle jetzt dein erstes Angebot!
               </Link>
             </p>

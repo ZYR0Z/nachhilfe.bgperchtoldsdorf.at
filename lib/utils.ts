@@ -15,6 +15,15 @@ export function createInitials(name: string) {
   return names[0].charAt(0).toUpperCase() + names[1].charAt(0).toUpperCase()
 }
 
+// TODO: holy moly this is bad (will fix :) )
+export function getGradeFromClass(userClass: string) {
+  const grade = userClass.charAt(0)
+  if (isNaN(Number(grade))) {
+    return null
+  }
+  return Number(grade)
+}
+
 
 type Schema = typeof schema;
 type TSchema = ExtractTablesWithRelations<Schema>;

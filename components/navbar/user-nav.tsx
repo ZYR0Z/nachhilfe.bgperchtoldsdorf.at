@@ -17,7 +17,7 @@ import { signOut } from "next-auth/react";
 import { User } from "next-auth";
 import { useState, useEffect } from "react";
 
-export function UserNav({ user }: { user: User }) {
+export function UserNav({ user, pathname }: { user: User; pathname: string }) {
   const [profilePicture, setProfilePicture] = useState<string | undefined>(
     undefined,
   );
@@ -59,16 +59,16 @@ export function UserNav({ user }: { user: User }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/nachhilfe-anbieten" className="cursor-pointer">
+            <Link href="/angebote/meine-angebote" className="cursor-pointer">
               <UserIcon className="mr-2 h-4 w-4" />
               <span>Meine Angebote</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
-          <Button className="w-full bg-primary/80">
-            <LogOut className="mr-2 h-4 w-4 text-background" />
+        <DropdownMenuItem onClick={() => signOut({ redirectTo: pathname })}>
+          <Button className="w-full bg-primary text-foreground">
+            <LogOut className="mr-2 h-4 w-4 text-foreground" />
             Abmelden
           </Button>
         </DropdownMenuItem>

@@ -5,17 +5,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PencilRuler } from "lucide-react";
-import { UserNav } from "@/components/user-nav";
+import { UserNav } from "@/components/navbar/user-nav";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { User } from "next-auth";
+import { signIn } from "next-auth/react";
 
 export function Navbar({ user }: { user: User | undefined }) {
   const pathname = usePathname();
+  const isAdmin = true; // TODO: implement should be in the user db object
 
   const navItems = [
-    { name: "Nachhilfe suchen", href: "/nachhilfe-suchen" },
-    { name: "Nachhilfe anbieten", href: "/nachhilfe-anbieten" },
+    { name: "Nachhilfe suchen", href: "/angebote" },
+    { name: "Nachhilfe anbieten", href: "/angebote/meine-angebote" },
   ];
 
   return (
@@ -41,19 +43,31 @@ export function Navbar({ user }: { user: User | undefined }) {
                     : "text-muted-foreground",
                 )}
               >
-                {" "}
                 {name}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-destructive",
+                  pathname === "/seitenadministration"
+                    ? "text-foreground underline "
+                    : "text-muted-foreground",
+                )}
+              >
+                Seitenadministration
+              </Link>
+            )}
           </nav>
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
           {user ? (
-            <UserNav user={user} />
+            <UserNav user={user} pathname={pathname} />
           ) : (
-            <Button asChild variant="default">
-              <Link href="/api/auth/signin">Anmelden</Link>
+            <Button asChild variant="default" onClick={() => signIn(pathname)}>
+              Anmelden
             </Button>
           )}
         </div>

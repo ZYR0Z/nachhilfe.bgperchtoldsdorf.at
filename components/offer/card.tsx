@@ -1,4 +1,3 @@
-"use client";
 import {
   Card,
   CardHeader,
@@ -7,19 +6,22 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+
+import EditButtons from "@/components/offer/edit-buttons";
+
 import Link from "next/link";
+
+import { cn } from "@/lib/utils";
 import { TutoringOffer } from "@/actions/offerActions";
-import EditButtons from "./edit-buttons";
+import { Grade } from "@/actions/gradeActions";
 
 interface OfferCardProps {
   offer: TutoringOffer;
   variant?: "view" | "edit" | "admin";
   filters?: {
-    subject?: string;
-    grades?: number[];
+    grades?: Grade[];
   };
 }
 
@@ -65,8 +67,7 @@ export default function OfferCard({
         <p className="italic">{offer.description}</p>
       </CardContent>
       <CardFooter>
-        {/* TODO: we need to gernalize this*/}
-        <Link href={`/nachhilfe-suchen/angebot/${offer.id}`}>
+        <Link href={`/angebote/${offer.id}`}>
           <Button className="cursor-pointer">Details anzeigen</Button>
         </Link>
       </CardFooter>

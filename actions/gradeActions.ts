@@ -1,1 +1,1 @@
-export type Grade = number[]
+export type Grade = number

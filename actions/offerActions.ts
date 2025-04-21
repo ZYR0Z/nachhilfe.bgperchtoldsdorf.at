@@ -57,7 +57,7 @@ export const editOffer = async (id: number, offer: typeof tutoringOffersTable.$i
   await db.update(tutoringOffersTable)
     .set(offer)
     .where(eq(tutoringOffersTable.id, id))
-  revalidatePath("/nachilfe-anbieten")
+  revalidatePath("/angebote/meine-angebote")
 }
 
 // TODO: cascading delete on subject & tutor deletion?

@@ -1,15 +1,15 @@
 import { NewTutor } from "@/actions/tutorActions";
-import OfferForm from "@/components/offer-form";
+import OfferForm from "@/components/offer/form";
 import { getAllSubjects } from "@/actions/subjectActions";
 import { auth } from "@/auth";
 import { signIn } from "next-auth/react";
 
-export default async function NewTutoringOffer() {
+export default async function Page() {
   const subjects = await getAllSubjects();
   const grades = Array.from({ length: 8 }, (_, i) => i + 1);
   const session = await auth();
   if (!session?.user?.email || !session.user.name)
-    return signIn("/nachhilfe-anbieten/neu");
+    return signIn("/angebote/neu");
   const { email, name, image } = session.user;
 
   // TODO: maybe we can also create a wrapper for this type

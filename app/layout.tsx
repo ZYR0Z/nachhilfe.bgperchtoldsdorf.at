@@ -1,8 +1,8 @@
-import { Navbar } from "@/components/navbar";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Navbar } from "@/components/navbar/navbar";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import "@/app/globals.css";
 import { Geist_Mono } from "next/font/google";
-import Footer from "@/components/footer";
+import Footer from "@/components/footer/footer";
 import { auth } from "@/auth";
 
 const GeistMono = Geist_Mono({

@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
@@ -21,7 +22,7 @@ export default function EditButtons({ id }: { id: TutoringOffer["id"] }) {
   return (
     <div className="flex items-center gap-2 ml-auto">
       {/* TODO: make the width & height the same bc what is this??? */}
-      <Link href={`/nachhilfe-anbieten/${id}`}>
+      <Link href={`/angebote/${id}/bearbeiten`}>
         <Button variant="outline" className="cursor-pointer aspect-square w-10">
           <Pencil />
         </Button>

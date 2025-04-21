@@ -1,12 +1,8 @@
 # TODO
-- [ ] consistent orange color 
-- [ ] use correct tailwindclasses for color to handle dark / light mode
-- [ ] see if we like that the navbar is a `container` and not a bit wider
-- [ ] polish the offer-grid -> maybe seperate components
-    - [ ] add loading state for db fetching
-    - [ ] create a offer-card component and then the grid should be a list of offer-cards
-    - [ ] show create new entry on empty state
+- [ ] we need to add a loading state every page that needs to fetch data from the db
+    - [ ] we need to fix the loading on subpages (maybe each card has a loading prop & own load handeling?)
 - [ ] make navbar active link match all the subroutes as well so /nachhilfe-anbieten and ./nachhilfe-anbieten/neu are both active
 - [ ] offer form should recieve an offer: Offer | null
     - [ ] prefill those values -> if null it will default to nothing?
     - [ ] also insert all the grades but also get the grade of the user (we kinda do that already) and disable all grades which are >= the users grade
+    

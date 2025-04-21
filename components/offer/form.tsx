@@ -1,5 +1,6 @@
 "use client";
 import { redirect } from "next/navigation";
+import { Label } from "@/components/ui/label";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,12 +34,12 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getGradeFromClass } from "@/lib/utils";
 import { createInsertSchema } from "drizzle-zod";
 import { tutoringOffersTable } from "@/db/schema";
 import { Subject } from "@/actions/subjectActions";
 import { createTutor, NewTutor } from "@/actions/tutorActions";
-import { createOffer } from "@/actions/offerActions";
+import { createOffer, editOffer, TutoringOffer } from "@/actions/offerActions";
 
 const formSchema = createInsertSchema(tutoringOffersTable);
 
@@ -46,28 +47,45 @@ export default function OfferForm({
   subjects,
   grades,
   tutor,
+  offer,
 }: {
   subjects: Subject[];
   // TODO: we want to have the type from the db
   grades: number[];
   tutor: NewTutor;
+  offer?: TutoringOffer;
 }) {
+  const userGrade = getGradeFromClass(tutor.user_class);
+  if (!userGrade) {
+    throw new Error(
+      "Production ready code™: Invalid user class (we fucked up the algo real bad)",
+    );
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      grades: grades,
-      prices: [{ duration: 60, price: 0 }],
-      timeslots: [{ day: "Montag", startTime: "14:00", endTime: "15:00" }],
-      // TODO: we need to make sure that this works with ldap
-      // and also now with google oauth2
+      // INFO: only create offers for (at least) one grade below you
+      grades: grades.filter((grade) => grade < userGrade),
+      // INFO: we dont care if its undefined (react-hook-form will handle it)
+      ...offer,
+      prices: offer?.prices ?? [{ duration: undefined, price: undefined }],
+      timeslots: offer?.timeslots ?? [
+        { day: undefined, startTime: undefined, endTime: undefined },
+      ],
       tutor_id: tutor.id,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    createTutor(tutor);
-    createOffer(values);
-    redirect("/nachhilfe-anbieten");
+    // TODO: we want to have a seperate action for updateOrCreate
+    if (offer && offer.id) {
+      editOffer(offer.id, values);
+    } else {
+      createOffer(values);
+      createTutor(tutor);
+    }
+    redirect("/angebote/meine-angebote");
   }
 
   return (
@@ -269,36 +287,48 @@ export default function OfferForm({
           name="timeslots"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Verfügbare Zeiten</FormLabel>
+              <FormLabel className="mb-4">Verfügbare Zeiten</FormLabel>
               {field.value?.map((slot, index) => (
-                <div key={index} className="grid grid-cols-3 gap-4">
-                  <Input
-                    placeholder="Tag"
-                    value={slot.day}
-                    onChange={(e) => {
-                      const updated = [...field.value];
-                      updated[index].day = e.target.value;
-                      field.onChange(updated);
-                    }}
-                  />
-                  <Input
-                    type="time"
-                    value={slot.startTime}
-                    onChange={(e) => {
-                      const updated = [...field.value];
-                      updated[index].startTime = e.target.value;
-                      field.onChange(updated);
-                    }}
-                  />
-                  <Input
-                    type="time"
-                    value={slot.endTime}
-                    onChange={(e) => {
-                      const updated = [...field.value];
-                      updated[index].endTime = e.target.value;
-                      field.onChange(updated);
-                    }}
-                  />
+                <div key={index} className="grid grid-cols-3 gap-4 space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="day">Tag</Label>
+                    <Input
+                      placeholder="z.B. Montag"
+                      id="day"
+                      value={slot.day}
+                      onChange={(e) => {
+                        const updated = [...field.value];
+                        updated[index].day = e.target.value;
+                        field.onChange(updated);
+                      }}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="startTime">Startzeit</Label>
+                    <Input
+                      type="time"
+                      value={slot.startTime}
+                      id="startTime"
+                      onChange={(e) => {
+                        const updated = [...field.value];
+                        updated[index].startTime = e.target.value;
+                        field.onChange(updated);
+                      }}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="endTime">Endzeit</Label>
+                    <Input
+                      type="time"
+                      id="endTime"
+                      value={slot.endTime}
+                      onChange={(e) => {
+                        const updated = [...field.value];
+                        updated[index].endTime = e.target.value;
+                        field.onChange(updated);
+                      }}
+                    />
+                  </div>
                 </div>
               ))}
               <Button

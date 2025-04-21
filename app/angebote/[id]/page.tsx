@@ -1,6 +1,6 @@
+import { ArrowLeft, Clock, TriangleAlert } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { createInitials } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card";
 import {
@@ -11,20 +11,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Clock, ArrowLeft, TriangleAlert } from "lucide-react";
-import { TutoringOffer } from "@/actions/offerActions";
+
+import { getOfferById } from "@/actions/offerActions";
+import { createInitials } from "@/lib/utils";
+
+import { notFound } from "next/navigation";
 import Link from "next/link";
 
-export default function DetailGrid({ offer }: { offer: TutoringOffer }) {
+type Params = Promise<{ id: string }>;
+
+export default async function Page({ params }: { params: Params }) {
+  const id = Number((await params).id);
+  if (isNaN(id)) notFound();
+
+  const offer = (await getOfferById(id)) ?? notFound();
+
   return (
     <div className="container mx-auto py-8 px-4 max-w-5xl">
+      {/* TODO: we need to generalize this */}
       <Link
-        href="/nachhilfe-suchen"
+        href="/angebote"
         className="text-sm text-muted-foreground mb-4 flex items-center"
       >
         <ArrowLeft className="w-4 h-4 mr-2" /> Zurück zur Übersicht
       </Link>
       <h2 className="font-bold text-xl mb-4">{offer.subject.name}</h2>
+
       <div className="grid gap-8 grid-cols-1 md:grid-cols-3">
         <Card className="col-span-2">
           <CardContent>
@@ -48,7 +60,7 @@ export default function DetailGrid({ offer }: { offer: TutoringOffer }) {
             <h3 className="font-medium mb-2">Schulstufe(n):</h3>
             <div className="flex flex-wrap gap-2 mb-4">
               {offer.grades.map((grade) => (
-                <Badge key={grade} className="bg-foreground/80">
+                <Badge key={grade} className="bg-muted text-foreground">
                   {grade}
                 </Badge>
               ))}
@@ -90,9 +102,11 @@ export default function DetailGrid({ offer }: { offer: TutoringOffer }) {
               <Button className="w-full mb-4">
                 Direkt eine Anfrage senden
               </Button>
-              <Button className="w-full" variant="outline">
-                Per E-Mail kontaktieren
-              </Button>
+              <Link href={`mailto:${offer.tutor.email}`}>
+                <Button className="w-full" variant="outline">
+                  Per E-Mail kontaktieren
+                </Button>
+              </Link>
             </CardContent>
           </Card>
           <Card>
@@ -119,7 +133,7 @@ export default function DetailGrid({ offer }: { offer: TutoringOffer }) {
               <div>
                 <p className="text-xs text-muted-foreground mt-4">
                   <TriangleAlert className="inline h-4 w-4 mr-1" />
-                  Preise sind unverbindlich und können sich jederzeit verändern.
+                  Preise sind unverbindlich und können sich jederzeit ändern.
                 </p>
               </div>
             </CardContent>

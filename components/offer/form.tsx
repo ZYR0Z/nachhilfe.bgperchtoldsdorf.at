@@ -179,6 +179,7 @@ export default function OfferForm({
                         <FormControl>
                           <Checkbox
                             checked={field.value.includes(grade)}
+                            disabled={userGrade <= grade}
                             onCheckedChange={(checked) => {
                               return checked
                                 ? field.onChange([...field.value, grade])

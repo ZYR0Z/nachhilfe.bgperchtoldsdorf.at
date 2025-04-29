@@ -13,7 +13,7 @@ export const getTutorById = async (id: string) => {
 }
 
 export const getAllTutors = async () => {
-  await db.query.tutorsTable.findMany()
+  return await db.query.tutorsTable.findMany()
 }
 
 export const createTutor = async (tutor: typeof tutorsTable.$inferInsert) => {

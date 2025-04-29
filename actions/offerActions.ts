@@ -7,6 +7,7 @@ import { InferResultType } from "@/lib/utils";
 
 export type TutoringOffer = InferResultType<'tutoringOffersTable', { subject: true, tutor: true }>
 
+// TODO: do we want to let typescript infer the type of the offer or do want to strongly type it?
 export const getAllOffers = async () => {
   return await db.query.tutoringOffersTable.findMany({
     with: {
@@ -64,7 +65,7 @@ export const editOffer = async (id: number, offer: typeof tutoringOffersTable.$i
 export const deleteOffer = async (id: number) => {
   await db.delete(tutoringOffersTable)
     .where(eq(tutoringOffersTable.id, id))
-  revalidatePath("/nachilfe-anbieten")
+  revalidatePath("/angebote/meine-angebote")
 }
 
 

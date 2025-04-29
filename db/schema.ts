@@ -47,7 +47,7 @@ export const tutoringOffersTable = pgTable(
     // INFO: check if the grades are in the range of 1-8
     check("grades_in_range", sql`${table.grades} <@ ARRAY[1,2,3,4,5,6,7,8]`),
   ]
-);
+).enableRLS();
 
 export const tutorsTable = pgTable("tutors", {
   // Will be provided from ldap auth service
@@ -62,12 +62,12 @@ export const tutorsTable = pgTable("tutors", {
   // TODO: sync the tutors infos with the ldap auth service (especially for the user_class)
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow().$onUpdate(() => new Date()),
-});
+}).enableRLS();
 
 export const subjectsTable = pgTable("subjects", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 255 }).notNull().unique()
-});
+}).enableRLS();
 
 export const tutoringOfferRelations = relations(
   tutoringOffersTable,

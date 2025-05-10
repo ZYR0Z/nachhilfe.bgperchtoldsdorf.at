@@ -52,8 +52,8 @@ export function Navbar({ user }: { user: User | undefined }) {
                 href="/admin"
                 className={cn(
                   "text-sm font-medium transition-colors hover:text-destructive",
-                  pathname === "/seitenadministration"
-                    ? "text-foreground underline "
+                  pathname === "/admin"
+                    ? "text-destructive underline "
                     : "text-muted-foreground",
                 )}
               >

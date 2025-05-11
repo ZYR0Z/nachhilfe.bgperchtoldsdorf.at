@@ -1,41 +1,64 @@
 "use server"
 import { tutoringOffersTable } from "@/db/schema";
+import { unstable_cache } from 'next/cache'
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { InferResultType } from "@/lib/utils";
 
 export type TutoringOffer = InferResultType<'tutoringOffersTable', { subject: true, tutor: true }>
 
 // TODO: do we want to let typescript infer the type of the offer or do want to strongly type it?
-export const getAllOffers = async () => {
-  return await db.query.tutoringOffersTable.findMany({
-    with: {
-      tutor: true,
-      subject: true,
-    }
-  })
-}
+// export const getAllOffers = async () => {
+//   const data = await db.query.tutoringOffersTable.findMany({
+//     with: {
+//       tutor: true,
+//       subject: true,
+//     }
+//   })
+//   return data
+// }
 
-export const getOfferById = async (id: number) => {
-  return await db.query.tutoringOffersTable.findFirst({
-    where: (tutoringOffersTable, { eq }) => eq(tutoringOffersTable.id, id),
-    with: {
-      tutor: true,
-      subject: true,
-    }
-  })
-}
 
-export const getOffersByTutorId = async (tutorId: string) => {
-  return await db.query.tutoringOffersTable.findMany({
-    where: (tutoringOffersTable, { eq }) => eq(tutoringOffersTable.tutor_id, tutorId),
-    with: {
-      tutor: true,
-      subject: true,
-    }
-  })
-}
+export const getAllOffers = unstable_cache(
+  async () => {
+    return await db.query.tutoringOffersTable.findMany({
+      with: {
+        tutor: true,
+        subject: true,
+      }
+    })
+  },
+  ['offers']
+)
+
+export const getOfferById = unstable_cache(
+  async (id: number) => {
+    return await db.query.tutoringOffersTable.findFirst({
+      where: (tutoringOffersTable, { eq }) => eq(tutoringOffersTable.id, id),
+      with: {
+        tutor: true,
+        subject: true,
+      }
+    });
+  },
+  // TODO: we need to make this dynamic
+  [`offer:byID`]
+);
+
+export const getOffersByTutorId = unstable_cache(
+  async (tutorId: string) => {
+    return await db.query.tutoringOffersTable.findMany({
+      where: (tutoringOffersTable, { eq }) => eq(tutoringOffersTable.tutor_id, tutorId),
+      with: {
+        tutor: true,
+        subject: true,
+      }
+    })
+  },
+  // TODO: we need to make this dynamic
+  [`offer:byTutorId`]
+)
 
 export const getOffersBySubjectId = async (subjectId: number) => {
   return await db.query.tutoringOffersTable.findMany({
@@ -58,14 +81,22 @@ export const editOffer = async (id: number, offer: typeof tutoringOffersTable.$i
   await db.update(tutoringOffersTable)
     .set(offer)
     .where(eq(tutoringOffersTable.id, id))
+  // TODO: do we even need this?
   revalidatePath("/angebote/meine-angebote")
+  revalidateTag(`offers`)
+  // TODO: we need to make this dynamic
+  revalidateTag(`offer:byID`)
 }
 
 // TODO: cascading delete on subject & tutor deletion?
 export const deleteOffer = async (id: number) => {
   await db.delete(tutoringOffersTable)
     .where(eq(tutoringOffersTable.id, id))
+  // TODO: do we even need this?
   revalidatePath("/angebote/meine-angebote")
+  revalidateTag(`offers`)
+  // TODO: we need to make this dynamic
+  revalidateTag(`offer:byID`)
 }
 
 

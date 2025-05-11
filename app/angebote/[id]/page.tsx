@@ -29,6 +29,7 @@ export default async function Page({ params }: { params: Params }) {
   return (
     <div className="container mx-auto py-8 px-4 max-w-5xl">
       {/* TODO: we need to generalize this */}
+      {/* TODO: we need this to be back not a fixed path */}
       <Link
         href="/angebote"
         className="text-sm text-muted-foreground mb-4 flex items-center"

@@ -7,14 +7,13 @@ import { getOffersByTutorId } from "@/actions/offerActions";
 
 export default async function OfferTutoring() {
   const session = await auth();
-  // TODO: we want to actually check for a user_id
-  if (!session?.user?.email) {
+  if (!session?.user?.id) {
     return signIn(undefined, {
       redirectTo: "/angebote/meine-angebote",
     });
   }
 
-  const offers = await getOffersByTutorId(session.user.email);
+  const offers = await getOffersByTutorId(session.user.id);
 
   const { name } = session.user;
 

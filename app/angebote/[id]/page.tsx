@@ -44,7 +44,7 @@ export default async function Page({ params }: { params: Params }) {
             <div className="flex items-center gap-4 mb-4">
               <Avatar>
                 <AvatarImage
-                  src={offer.tutor.profile_picture || undefined}
+                  src={offer.tutor.image || undefined}
                   alt={offer.tutor.name}
                 />
                 <AvatarFallback>
@@ -54,7 +54,7 @@ export default async function Page({ params }: { params: Params }) {
               <div>
                 <p className="font-medium">{offer.tutor.name}</p>
                 <p className="text-muted-foreground text-sm">
-                  {offer.tutor.user_class}
+                  {offer.tutor.department}
                 </p>
               </div>
             </div>

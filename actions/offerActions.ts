@@ -8,18 +8,6 @@ import { InferResultType } from "@/lib/utils";
 
 export type TutoringOffer = InferResultType<'tutoringOffersTable', { subject: true, tutor: true }>
 
-// TODO: do we want to let typescript infer the type of the offer or do want to strongly type it?
-// export const getAllOffers = async () => {
-//   const data = await db.query.tutoringOffersTable.findMany({
-//     with: {
-//       tutor: true,
-//       subject: true,
-//     }
-//   })
-//   return data
-// }
-
-
 export const getAllOffers = unstable_cache(
   async () => {
     return await db.query.tutoringOffersTable.findMany({
@@ -29,7 +17,8 @@ export const getAllOffers = unstable_cache(
       }
     })
   },
-  ['offers']
+  ['offers'],
+  { tags: ['offers'] }
 )
 
 export const getOfferById = unstable_cache(
@@ -43,7 +32,8 @@ export const getOfferById = unstable_cache(
     });
   },
   // TODO: we need to make this dynamic
-  [`offer:byID`]
+  [`offer:byID`],
+  { tags: [`offer:byID`] }
 );
 
 export const getOffersByTutorId = unstable_cache(
@@ -57,7 +47,8 @@ export const getOffersByTutorId = unstable_cache(
     })
   },
   // TODO: we need to make this dynamic
-  [`offer:byTutorId`]
+  [`offer:byTutorId`],
+  { tags: [`offer:byTutorId`] }
 )
 
 export const getOffersBySubjectId = async (subjectId: number) => {
@@ -75,6 +66,10 @@ export const getOffersBySubjectId = async (subjectId: number) => {
 // TODO: do we want to have it return the created offer?
 export const createOffer = async (offer: typeof tutoringOffersTable.$inferInsert) => {
   await db.insert(tutoringOffersTable).values(offer)
+  revalidateTag('offers')
+  revalidateTag(`offer:byID`)
+  revalidateTag(`offer:byTutorId`)
+  revalidatePath("/angebote/meine-angebote")
 }
 
 export const editOffer = async (id: number, offer: typeof tutoringOffersTable.$inferInsert) => {

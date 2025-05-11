@@ -55,10 +55,10 @@ export const tutorsTable = pgTable("tutors", {
   name: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
   // WARNING: user_class != grade -> grades are without class delimiters (e.g. "7D" -> "7")
-  user_class: varchar({ length: 255 }).notNull(),
+  department: varchar({ length: 255 }).notNull(),
   // TODO: maybe the images are local?
   // maybe we dont even get the from ldap? just from moodle => then we wont do this
-  profile_picture: text(),
+  image: text(),
   // TODO: sync the tutors infos with the ldap auth service (especially for the user_class)
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow().$onUpdate(() => new Date()),

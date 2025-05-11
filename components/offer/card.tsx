@@ -39,7 +39,7 @@ export default function OfferCard({
         </CardTitle>
         <CardDescription>
           <div>
-            Angeboten von {offer.tutor.name} ({offer.tutor.user_class})
+            Angeboten von {offer.tutor.name} ({offer.tutor.department})
             <div className="flex w-full mt-2">
               <p className="mr-4">Klassen:</p>
               <div className="flex flex-wrap gap-2">

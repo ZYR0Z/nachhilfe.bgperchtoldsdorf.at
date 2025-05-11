@@ -55,7 +55,7 @@ export default function OfferForm({
   tutor: NewTutor;
   offer?: TutoringOffer;
 }) {
-  const userGrade = getGradeFromClass(tutor.user_class);
+  const userGrade = getGradeFromClass(tutor.department);
   if (!userGrade) {
     throw new Error(
       "Production ready code™: Invalid user class (we fucked up the algo real bad)",

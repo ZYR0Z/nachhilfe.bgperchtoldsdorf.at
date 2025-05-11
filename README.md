@@ -1,3 +1,7 @@
+# Nachhilfe-Webseite
+> [!NOTE]
+> Die Seite ist vorläufig auf [https://nachhilfe.zyroz.dev](https://nachhilfe.zyroz.dev) erreichbar. Und wird der Einfachkeit halber auf Vercel gehostet. Wenn die Seite finalisiert ist, wird sie mit Docker lokal gehostet werden.
+
 # Installation & Lokales Setup
 
 Zuerst müssen alle Node-Module installiert werden. 

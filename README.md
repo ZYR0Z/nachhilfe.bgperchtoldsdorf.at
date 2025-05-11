@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Installation & Lokales Setup
 
-## Getting Started
+Zuerst müssen alle Node-Module installiert werden. 
 
-First, run the development server:
+```bash
+npm install
+# oder
+yarn install
+# oder
+pnpm install
+# oder
+bun install
+```
+
+Dann kann der lokale Server gestartet werden (Development-Mode). 
 
 ```bash
 npm run dev
-# or
+# oder
 yarn dev
-# or
+# oder
 pnpm dev
-# or
+# oder
 bun dev
 ```
+Der Server läuft dann auf [http://localhost:3000](http://localhost:3000).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Infrastruktur / Design
+- Alle GET-Requests werden unendlich lange gecacht (nur wenn sich der Inhalt ändert, wird neu geladen um keine unnötigen Datenbank-Abfragen zu machen).
+- Zur _BUILD_-Zeit werden alle bereits vorhandenen Nachhilfe-Angebote gebaut und erst wenn ein neues Angebot erstellt wird, wird diese beim ersten Aufrufen "kompiliert".
+- Sobald ein Angebot erstellt / bearbeitet wird, werden die passenden Seit gebaut und wieder gecacht (4ms Acess-Time statt 100ms)
+- Authentifizierung wird über [Auth.js](https://authjs.dev/) durchgeführt (und Microsoft Entra-ID).
+- Datenbank ist eine lokale PostgreSQL Instanz mit [Dirzzle ORM](https://orm.drizzle.team/) und [Zod](https://zod.dev/) für die Validierung.
+- Alle Design / UI-Elemente sind von [Shadcn](https://ui.shadcn.com/) zusammengebastelt. 
+- Als reverse Proxy wird [Nginx](https://www.nginx.com/) oder [Traefik](https://traefik.io/) verwendet.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Seitenübersicht mit einer MAP:
+> [!IMPORTANT] 
+> Bild von Excalidraw einfügen
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Datenbank Schema 
+Dies kann entweder in der Drizzle Datei: `db/schema.ts` oder mit dem lokalen Drizzle Studio (`npm run drizzle:studio`) angesehen werden.
+Weitere nützliche Befehle sind:
 
-## Learn More
+```bash
+# Migration erstellen
+npm run drizzle:migrate
+# Migration ausführen
+npm run drizzle:push
+# Migration zurücksetzen
+npm run drizzle:rollback
+```
+## Deployment (Zero-Downtime mit Docker)
+Wir nutzen Github Actions um automatisch bei jedem Push auf `master` die Seite neu zu bauen. Der Ablauf sieht wie folgt aus:
 
-To learn more about Next.js, take a look at the following resources:
+1. Github Action wird getriggert
+2. SSH-Connection in den Server wird aufgebaut
+3. Docker-Container wird neu gebaut (mit dem Cache)
+4. Docker-Container wird gestartet und es wird gewartet, bis er healthy ist (siehe `docker/healthchecks.sh`)
+5. Der Traffic wird auf den neuen Container umgeleitet
+6. Der alte Container wird gestoppt und gelöscht
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> [!CAUTION]
+> Der PostgresSQL-Container wird nie gelöscht und auch nie neu gebaut und bleibt immer auf der festgelegten Version (`17.5-alpine` siehe `docker/docker-compose.yml`). Es muss manuell geupdated werden. 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Vielleicht sollte die Datenbank auch gebackuppt werden (am besten an einem anderen Ort), aber das ist noch nicht implementiert.

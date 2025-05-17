@@ -1,9 +1,11 @@
 import { getAllOffers } from "@/actions/offerActions";
 import OfferCard from "@/components/offer/card";
+import { auth } from "@/auth";
 
 export default async function FindTutoring() {
   // TODO: add filtering
   const offers = await getAllOffers();
+  const session = await auth();
 
   return (
     <div className="p-8">
@@ -13,7 +15,7 @@ export default async function FindTutoring() {
       </div>
       <div className="grid grid-cols-3 gap-4">
         {offers.map((offer) => (
-          <OfferCard key={offer.id} offer={offer} />
+          <OfferCard key={offer.id} offer={offer} user={session?.user} />
         ))}
       </div>
     </div>

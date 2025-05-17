@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, TriangleAlert } from "lucide-react";
+import { Clock, TriangleAlert } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,9 +14,12 @@ import {
 
 import { getOfferById } from "@/actions/offerActions";
 import { createInitials } from "@/lib/utils";
+import { auth } from "@/auth";
+import EditButtons from "@/components/offer/edit-buttons";
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import BackButton from "@/components/back-button";
 
 type Params = Promise<{ id: string }>;
 
@@ -26,36 +29,36 @@ export default async function Page({ params }: { params: Params }) {
 
   const offer = (await getOfferById(id)) ?? notFound();
 
+  const session = await auth();
+
   return (
     <div className="container mx-auto py-8 px-4 max-w-5xl">
-      {/* TODO: we need to generalize this */}
-      {/* TODO: we need this to be back not a fixed path */}
-      <Link
-        href="/angebote"
-        className="text-sm text-muted-foreground mb-4 flex items-center"
-      >
-        <ArrowLeft className="w-4 h-4 mr-2" /> Zurück zur Übersicht
-      </Link>
+      <BackButton />
       <h2 className="font-bold text-xl mb-4">{offer.subject.name}</h2>
 
       <div className="grid gap-8 grid-cols-1 md:grid-cols-3">
         <Card className="col-span-2">
           <CardContent>
-            <div className="flex items-center gap-4 mb-4">
-              <Avatar>
-                <AvatarImage
-                  src={offer.tutor.image || undefined}
-                  alt={offer.tutor.name}
-                />
-                <AvatarFallback>
-                  {createInitials(offer.tutor.name)}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="font-medium">{offer.tutor.name}</p>
-                <p className="text-muted-foreground text-sm">
-                  {offer.tutor.department}
-                </p>
+            <div>
+              <div className="flex items-center gap-4 mb-4">
+                <Avatar>
+                  <AvatarImage
+                    src={offer.tutor.image || undefined}
+                    alt={offer.tutor.name}
+                  />
+                  <AvatarFallback>
+                    {createInitials(offer.tutor.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-medium">{offer.tutor.name}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {offer.tutor.department}
+                  </p>
+                </div>
+                {session?.user?.id === offer.tutor.id && (
+                  <EditButtons id={offer.id} />
+                )}
               </div>
             </div>
             <h3 className="font-medium mb-2">Schulstufe(n):</h3>
@@ -100,14 +103,14 @@ export default async function Page({ params }: { params: Params }) {
               <CardTitle>Kontakt</CardTitle>
             </CardHeader>
             <CardContent>
-              <Button className="w-full mb-4">
+              <Button className="w-full mb-4" disabled>
                 Direkt eine Anfrage senden
               </Button>
-              <Link href={`mailto:${offer.tutor.email}`}>
-                <Button className="w-full" variant="outline">
+              <Button className="w-full" disabled variant="outline">
+                <Link href={`mailto:${offer.tutor.email}`}>
                   Per E-Mail kontaktieren
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </CardContent>
           </Card>
           <Card>

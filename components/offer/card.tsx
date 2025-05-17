@@ -16,10 +16,12 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { TutoringOffer } from "@/actions/offerActions";
 import { Grade } from "@/actions/gradeActions";
+import { User } from "next-auth";
 
 interface OfferCardProps {
   offer: TutoringOffer;
   variant?: "view" | "edit" | "admin";
+  user?: User | null;
   filters?: {
     grades?: Grade[];
   };
@@ -29,13 +31,16 @@ export default function OfferCard({
   offer,
   variant = "view",
   filters,
+  user = null,
 }: OfferCardProps) {
   return (
     <Card key={offer.id} className="w-full">
       <CardHeader>
         <CardTitle className="text-xl flex">
           {offer.subject.name}
-          {variant != "view" && <EditButtons id={offer.id} />}
+          {(variant != "view" ||
+            user?.id === offer.tutor_id ||
+            user?.department === "admin") && <EditButtons id={offer.id} />}
         </CardTitle>
         <CardDescription>
           <div>

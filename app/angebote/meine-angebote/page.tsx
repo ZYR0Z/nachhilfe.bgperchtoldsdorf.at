@@ -8,7 +8,7 @@ import { getOffersByTutorId } from "@/actions/offerActions";
 export default async function OfferTutoring() {
   const session = await auth();
   if (!session?.user?.id) {
-    return signIn(undefined, {
+    return signIn("microsoft-entra-id", {
       redirectTo: "/angebote/meine-angebote",
     });
   }

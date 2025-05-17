@@ -14,7 +14,7 @@ export default async function Page({ params }: { params: Params }) {
 
   const session = await auth();
   if (!session?.user?.id)
-    return signIn(undefined, {
+    return signIn("microsoft-entra-id", {
       redirectTo: `/angebote/${id}/bearbeiten`,
     });
 

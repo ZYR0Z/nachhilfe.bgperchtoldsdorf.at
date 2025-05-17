@@ -68,7 +68,9 @@ export function Navbar({ user }: { user: User | undefined }) {
           ) : (
             <Button
               variant="default"
-              onClick={() => signIn(undefined, { redirectTo: pathname })}
+              onClick={() =>
+                signIn("microsoft-entra-id", { redirectTo: pathname })
+              }
             >
               Anmelden
             </Button>

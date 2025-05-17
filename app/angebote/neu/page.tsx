@@ -7,7 +7,7 @@ export default async function Page() {
   const grades = Array.from({ length: 8 }, (_, i) => i + 1);
   const session = await auth();
   if (!session?.user?.id)
-    return signIn(undefined, { redirectTo: "/angebote/neu" });
+    return signIn("microsoft-entra-id", { redirectTo: "/angebote/neu" });
   return (
     <div className="max-w-5xl mx-auto p-8">
       <OfferForm subjects={subjects} grades={grades} tutor={session.user} />
